@@ -1,0 +1,127 @@
+:root {
+    --ivory: #FFFFF0;
+    --deep-night: #0A0A0A;
+    --moonlight: rgba(255,255,255,0.1);
+    --transition: cubic-bezier(0.23,1,0.32,1);
+}
+
+body {
+    background: var(--deep-night);
+    color: var(--ivory);
+    font-family: 'Cormorant Garamond', serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    line-height: 1.8;
+}
+
+.container {
+    max-width: 800px;
+    text-align: center;
+    padding: 3rem;
+}
+
+.verse-container {
+    background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(0,0,0,0.2));
+    padding: 4rem 3rem;
+    border-radius: 24px;
+    margin: 3rem 0;
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--moonlight);
+    box-shadow: 0 24px 48px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.verse-container::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.015) 50%, transparent 55%);
+    animation: celestial-glow 20s linear infinite;
+}
+
+#verse-text {
+    font-family: 'Uthmanic', 'Noto Naskh Arabic', serif;
+    font-size: 3rem;
+    line-height: 2;
+    text-align: right;
+    direction: rtl;
+    margin: 2rem 0;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+@font-face {
+    font-family: 'Uthmanic';
+    src: url('https://cdn.jsdelivr.net/gh/mir-taqi/mir-taqi@main/fonts/UthmanicHafs1Ver18.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/mir-taqi/mir-taqi@main/fonts/UthmanicHafs1Ver18.woff') format('woff');
+    font-display: swap;
+}
+
+#verse-translation {
+    font-size: 1.4rem;
+    line-height: 1.9;
+    color: rgba(255,255,255,0.85);
+    margin: 3rem 0;
+    padding: 2.5rem 0;
+    border-top: 1px solid var(--moonlight);
+    border-bottom: 1px solid var(--moonlight);
+}
+
+#verse-reference {
+    font-size: 1.1rem;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.6);
+    margin-top: 2rem;
+    text-transform: uppercase;
+}
+
+#generate-btn {
+    background: transparent;
+    border: 1px solid var(--moonlight);
+    color: var(--ivory);
+    padding: 1.4rem 4rem;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    transition: all 0.4s var(--transition);
+    backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
+}
+
+#generate-btn:hover {
+    border-color: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.loader {
+    border: 2px solid var(--moonlight);
+    border-top-color: var(--ivory);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes celestial-glow {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 768px) {
+    .container { padding: 1.5rem; }
+    .verse-container { padding: 3rem 2rem; }
+    #verse-text { font-size: 2.2rem; }
+    #verse-translation { font-size: 1.2rem; }
+}
