@@ -1,83 +1,92 @@
+// Configuration
+const TOTAL_SURAHS = 114;
+const API_BASE_URL = 'https://api.alquran.cloud/v1';
+const MAX_RETRIES = 3;
+
+// DOM Elements
 const verseText = document.getElementById('verse-text');
 const verseTranslation = document.getElementById('verse-translation');
 const verseReference = document.getElementById('verse-reference');
 const generateBtn = document.getElementById('generate-btn');
 const loader = document.querySelector('.loader');
 
-const TOTAL_SURAHS = 114;
-const API_BASE = 'https://api.alquran.cloud/v1';
+const verseElements = [verseText, verseTranslation, verseReference];
 
-async function fetchSurah(surahNumber) {
-    const response = await fetch(`${API_BASE}/surah/${surahNumber}/ar.alafasy`);
-    if (!response.ok) throw new Error('Failed to fetch surah');
-    return response.json();
-}
-
-async function fetchTranslation(surahNumber) {
-    const response = await fetch(`${API_BASE}/surah/${surahNumber}/en.sahih`);
-    if (!response.ok) throw new Error('Failed to fetch translation');
-    return response.json();
-}
-
-async function getRandomAyah(retryCount = 0) {
+const fetchSurah = async surahNumber => {
     try {
-        showLoader();
+        const response = await fetch(`${API_BASE_URL}/surah/${surahNumber}/ar.alafasy`);
+        if (!response.ok) throw new Error('Surah fetch failed');
+        return response.json();
+    } catch (error) {
+        console.error('Error fetching Surah:', error);
+        throw error;
+    }
+};
+
+const fetchTranslation = async surahNumber => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/surah/${surahNumber}/en.sahih`);
+        if (!response.ok) throw new Error('Translation fetch failed');
+        return response.json();
+    } catch (error) {
+        console.error('Error fetching translation:', error);
+        throw error;
+    }
+};
+
+const toggleLoader = (show = true) => {
+    loader.style.display = show ? 'block' : 'none';
+    verseElements.forEach(el => el.style.opacity = show ? '0.3' : '1');
+};
+
+const animateVerseElements = () => {
+    verseElements.forEach(el => {
+        el.classList.remove('fade-in');
+        void el.offsetWidth; 
+        el.classList.add('fade-in');
+    });
+};
+
+const getRandomAyah = async (retryCount = 0) => {
+    try {
+        toggleLoader(true);
+        
         const surahNumber = Math.floor(Math.random() * TOTAL_SURAHS) + 1;
         const [surahData, translationData] = await Promise.all([
             fetchSurah(surahNumber),
             fetchTranslation(surahNumber)
         ]);
-        
-        const totalAyahs = surahData.data.numberOfAyahs;
-        const ayahIndex = Math.floor(Math.random() * totalAyahs);
-        
-        updateUI(
-            surahData.data.ayahs[ayahIndex].text,
-            translationData.data.ayahs[ayahIndex].text,
-            surahData.data.englishName,
-            surahNumber,
-            ayahIndex
-        );
+
+        const { numberOfAyahs } = surahData.data;
+        const ayahIndex = Math.floor(Math.random() * numberOfAyahs);
+        const arabicText = surahData.data.ayahs[ayahIndex].text;
+        const englishText = translationData.data.ayahs[ayahIndex].text;
+
+        verseText.textContent = arabicText;
+        verseTranslation.textContent = englishText;
+        verseReference.textContent = `${surahData.data.englishName} (${surahNumber}:${ayahIndex + 1})`;
+
+        animateVerseElements();
+
     } catch (error) {
-        if (retryCount < 3) return getRandomAyah(retryCount + 1);
-        handleError(error);
+        console.error('Operation failed:', error);
+        if (retryCount < MAX_RETRIES) return getRandomAyah(retryCount + 1);
+        verseTranslation.textContent = "Error loading verse. Please try again.";
+        verseReference.textContent = "";
     } finally {
-        hideLoader();
+        toggleLoader(false);
     }
-}
+};
 
-function updateUI(arabic, english, surahName, surahNum, ayahIndex) {
-    verseText.textContent = arabic;
-    verseTranslation.textContent = english;
-    verseReference.textContent = `${surahName} (${surahNum}:${ayahIndex + 1})`;
-    
-    [verseText, verseTranslation, verseReference].forEach(el => {
-        el.classList.remove('fade-in');
-        void el.offsetWidth;
-        el.classList.add('fade-in');
-        el.style.opacity = 1;
-    });
-}
+const handleGenerateClick = () => {
+    verseElements.forEach(el => el.style.opacity = '0');
+    getRandomAyah();
+};
 
-function showLoader() {
-    loader.style.display = 'block';
-    [verseText, verseTranslation, verseReference].forEach(el => el.style.opacity = '0.3');
-}
+document.fonts.ready.then(() => {
+    document.body.classList.add('fonts-loaded');
+});
 
-function hideLoader() {
-    loader.style.display = 'none';
-    [verseText, verseTranslation, verseReference].forEach(el => el.style.opacity = '1');
-}
-
-function handleError() {
-    verseTranslation.textContent = "Error loading verse. Please try again.";
-    verseReference.textContent = "";
-}
-
-document.fonts.ready.then(() => document.body.classList.add('fonts-loaded'));
+generateBtn.addEventListener('click', handleGenerateClick);
 
 getRandomAyah();
-generateBtn.addEventListener('click', () => {
-    [verseText, verseTranslation, verseReference].forEach(el => el.style.opacity = '0');
-    getRandomAyah();
-});
