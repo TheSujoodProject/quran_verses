@@ -52,21 +52,22 @@ body {
 }
 
 @font-face {
-    font-family: 'Uthmanic';
-    src: url('https://cdn.jsdelivr.net/gh/mir-taqi/mir-taqi@main/fonts/UthmanicHafs1Ver18.woff2') format('woff2'),
-         url('https://cdn.jsdelivr.net/gh/mir-taqi/mir-taqi@main/fonts/UthmanicHafs1Ver18.woff') format('woff');
+    font-family: 'UthmanicHafs';
+    src: url('https://cdn.jsdelivr.net/gh/mushfekurrehman/quran-text-font@master/fonts/UthmanicHafs1Ver18.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/mushfekurrehman/quran-text-font@master/fonts/UthmanicHafs1Ver18.woff') format('woff');
     font-display: swap;
 }
 
 #verse-text {
-    font-family: 'Uthmanic', sans-serif;
-    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-family: 'UthmanicHafs', 'Amiri', sans-serif;
+    font-size: clamp(2rem, 5vw, 3rem);
     line-height: 1.8;
     text-align: right;
     direction: rtl;
-    margin: 1rem 0;
-    hyphens: auto;
-    overflow-wrap: break-word;
+    font-feature-settings: "liga" 1, "clig" 1, "calt" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 #verse-translation {
