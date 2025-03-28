@@ -1,25 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
-    <title>Verse Generator | Sujood</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; 
+          script-src 'self'; 
+          style-src 'self' https://fonts.googleapis.com; 
+          font-src 'self' https://cdn.jsdelivr.net; 
+          connect-src https://corsproxy.io https://api.alquran.cloud;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
     
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@400;600&family=Lateef&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <title>Quran Verse Generator | Sujood</title>
+    
+    <link rel="stylesheet" 
+          href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@400;600&display=swap"
+          crossorigin="anonymous">
+    
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <div class="verse-container">
+    <main class="container">
+        <article class="verse-container">
             <p id="verse-text" class="fade-in"></p>
             <div id="verse-translation" class="fade-in"></div>
             <p id="verse-reference" class="fade-in"></p>
-        </div>
-        <button id="generate-btn">New Verse</button>
-    </div>
-    <div class="loader"></div>
-    <script src="script.js"></script>
+        </article>
+        <button id="generate-btn" aria-label="Generate new verse">New Verse</button>
+    </main>
+    <div class="loader" role="alert" aria-busy="true"></div>
+
+    <script src="script.js" defer></script>
 </body>
 </html>
