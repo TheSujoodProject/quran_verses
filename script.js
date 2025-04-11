@@ -58,62 +58,50 @@ class QuranApp {
             : [surah, ayah, verseKey];
     }
 
+    async fetchTranslation(surah, ayah) {
+        const response = await fetch(
+            `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/en.sahih?cache=${Date.now()}`,
+            { cache: 'no-cache' }
+        );
+        return response.json().then(data => data.data.text);
+    }
+
     async loadNewVerse() {
         try {
             this.toggleLoader(true);
             const [surah, ayah, verseKey] = this.getRandomVerse();
             
-            // Cache-busted API requests
-            const versePromise = fetch(
-                `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/ar.alafasy?cache=${Date.now()}`, 
-                { cache: 'no-cache' }
-            );
-            
-            const translationPromise = fetch(
-                `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/en.sahih?cache=${Date.now()}`,
-                { cache: 'no-cache' }
-            );
-    
-            const surahPromise = fetch(
-                `https://api.alquran.cloud/v1/surah/${surah}?cache=${Date.now()}`,
-                { cache: 'no-cache' }
-            );
-    
-            const [verseRes, translationRes, surahRes] = await Promise.all([
-                versePromise,
-                translationPromise,
-                surahPromise
-            ]);
-    
-            // Verify all responses
-            if (!verseRes.ok) throw new Error(`Verse failed: ${verseRes.status}`);
-            if (!translationRes.ok) throw new Error(`Translation failed: ${translationRes.status}`);
-            if (!surahRes.ok) throw new Error(`Surah failed: ${surahRes.status}`);
-    
-            // Parse JSON in parallel
             const [verseData, translationData, surahData] = await Promise.all([
-                verseRes.json(),
-                translationRes.json(),
-                surahRes.json()
+                fetch(`https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/ar.alafasy?cache=${Date.now()}`),
+                fetch(`https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/en.sahih?cache=${Date.now()}`),
+                fetch(`https://api.alquran.cloud/v1/surah/${surah}?cache=${Date.now()}`)
             ]);
-    
+
+            if (!verseData.ok || !translationData.ok || !surahData.ok) {
+                throw new Error('Failed to fetch data');
+            }
+
+            const verse = await verseData.json();
+            const translation = await translationData.json();
+            const surahName = (await surahData.json()).data.englishName;
+
             this.updateUI(
-                verseData.data.text,
-                translationData.data.text,
-                surahData.data.englishName,
+                verse.data.text,
+                translation.data.text,
+                surahName,
                 ayah
             );
             
             this.addToHistory(
-                verseData.data.text,
-                translationData.data.text,
-                surahData.data.englishName,
+                verse.data.text,
+                translation.data.text,
+                surahName,
                 ayah,
                 verseKey
             );
-    
+
         } catch (error) {
-            console.error('Loading Error:', error);
+            console.error('Error:', error);
             this.showErrorNotification();
             setTimeout(() => this.loadNewVerse(), 2000);
         } finally {
