@@ -263,9 +263,3 @@ body {
     src: url('https://fonts.gstatic.com/s/notonaskharabic/v18/RrQ5bpV-9Dd1b1OAGA6M9PkyDu3BeMeKNlHdk.ttf');
     font-display: swap;
 }
-
-@media screen and (max-width: 768px) {
-    .arabic-text {
-        font-family: 'Noto Naskh Arabic Mobile', serif;
-    }
-}
