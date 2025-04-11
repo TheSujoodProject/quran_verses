@@ -1,158 +1,233 @@
 :root {
-    --ivory: #FFFFF0;
-    --deep-night: #0A0A0A;
-    --moonlight: rgba(255,255,255,0.1);
-    --transition: cubic-bezier(0.23,1,0.32,1);
-    --safe-padding: clamp(0.5rem, 3vw, 2rem);
-    --max-width: min(90rem, 95%);
-    --mobile-breakpoint: 480px;
-    --tablet-breakpoint: 768px;
+    /* Dark Theme */
+    --bg: #000000;
+    --surface: #1c1c1e;
+    --text: rgba(255, 255, 255, 0.92);
+    --text-secondary: rgba(255, 255, 255, 0.6);
+    --accent: #0a84ff;
+    --separator: rgba(255, 255, 255, 0.16);
+    --radius: 14px;
+}
+
+[data-theme="light"] {
+    --bg: #ffffff;
+    --surface: #f2f2f7;
+    --text: rgba(0, 0, 0, 0.92);
+    --text-secondary: rgba(0, 0, 0, 0.6);
+    --separator: rgba(0, 0, 0, 0.12);
 }
 
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
-}
-
-html {
-    scroll-behavior: smooth;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    background: var(--deep-night);
-    color: var(--ivory);
-    font-family: 'Cormorant Garamond', serif;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    line-height: 1.5;
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--safe-padding);
-    line-height: 1.6;
-    font-size: calc(1em + 0.25vw);
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
 }
 
 .container {
-    width: var(--max-width);
+    max-width: 680px;
     margin: 0 auto;
-    padding: var(--safe-padding);
+    padding: 1rem;
 }
 
-.verse-container {
-    background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(0,0,0,0.2));
-    padding: clamp(1rem, 3vw, 2rem);
-    border-radius: clamp(0.8rem, 2vw, 1.5rem);
-    margin: clamp(1rem, 3vw, 2rem) 0;
-    backdrop-filter: blur(16px);
-    border: 1px solid var(--moonlight);
-    max-height: 80vh;
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+}
+
+.app-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.theme-toggle {
+    background: var(--surface);
+    border: none;
+    padding: 0.75rem;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.05);
+}
+
+.verse-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border: 0.5px solid var(--separator);
+}
+
+.arabic-text {
+    font-family: 'Noto Naskh Arabic', sans-serif;
+    font-size: 2rem;
+    line-height: 2.4;
+    text-align: right;
+    direction: rtl;
+    margin-bottom: 1rem;
+}
+
+.translation-text {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    padding: 1rem 0;
+    border-top: 0.5px solid var(--separator);
+}
+
+.ios-button {
+    background: var(--surface);
+    color: var(--accent);
+    border: none;
+    padding: 1rem;
+    border-radius: var(--radius);
+    width: 100%;
+    font-weight: 500;
+    margin: 1rem 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ios-button:active {
+    opacity: 0.8;
+}
+
+.history-section {
+    margin-top: 2rem;
+}
+
+.history-title {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.history-item {
+    background: var(--surface);
+    padding: 1rem;
+    border-radius: var(--radius);
+    border: 0.5px solid var(--separator);
+    font-size: 0.9rem;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(var(--bg), 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    z-index: 100;
+}
+
+.activity-indicator {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--accent);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.secondary {
+    background: var(--surface) !important;
+    color: var(--text-secondary) !important;
+    margin-top: 0.5rem !important;
+}
+
+.history-section {
+    margin-top: 1rem;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.history-section.visible {
+    max-height: 1000px;
+    opacity: 1;
+    margin-top: 2rem;
+}
+
+.history-header {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    align-items: center;
+}
+
+.history-index {
+    color: var(--accent);
+    font-weight: 500;
+}
+
+.history-arabic {
+    font-family: 'Noto Naskh Arabic', sans-serif;
+    font-size: 1.4rem;
+    text-align: right;
+    direction: rtl;
+    margin: 0.5rem 0;
+}
+
+.history-translation {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.history-list {
+    display: grid;
+    gap: 1rem;
+    max-height: 600px;
     overflow-y: auto;
 }
 
-@font-face {
-    font-family: 'UthmanicHafs';
-    src: url('https://cdn.jsdelivr.net/gh/mushfekurrehman/quran-text-font@master/fonts/UthmanicHafs1Ver18.woff2') format('woff2'),
-         url('https://cdn.jsdelivr.net/gh/mushfekurrehman/quran-text-font@master/fonts/UthmanicHafs1Ver18.woff') format('woff');
-    font-display: swap;
+.history-item {
+    background: var(--surface);
+    padding: 1rem;
+    border-radius: var(--radius);
+    border: 0.5px solid var(--separator);
+    animation: slideIn 0.3s ease;
 }
 
-#verse-text {
-    font-family: 'UthmanicHafs', 'Amiri', sans-serif;
-    font-size: clamp(2rem, 5vw, 3rem);
-    line-height: 1.8;
-    text-align: right;
-    direction: rtl;
-    font-feature-settings: "liga" 1, "clig" 1, "calt" 1;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-#verse-translation {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: clamp(1rem, 3vw, 1.3rem);
-    line-height: 1.7;
-    color: rgba(255,255,255,0.85);
-    margin: clamp(1rem, 3vw, 1.5rem) 0;
-    padding: clamp(1rem, 3vw, 1.5rem) 0;
-    border-top: 1px solid var(--moonlight);
-    border-bottom: 1px solid var(--moonlight);
-}
-
-#verse-reference {
-    font-size: clamp(0.8rem, 2vw, 1rem);
-    letter-spacing: 1px;
-    color: rgba(255,255,255,0.6);
-    margin-top: clamp(1rem, 3vw, 1.5rem);
-    text-transform: uppercase;
-}
-
-#generate-btn {
-    background: transparent;
-    border: 1px solid var(--moonlight);
-    color: var(--ivory);
-    padding: clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2.5rem);
-    font-size: clamp(0.9rem, 2vw, 1.05rem);
-    border-radius: 50px;
-    transition: all 0.3s var(--transition);
-    backdrop-filter: blur(8px);
-    cursor: pointer;
-    width: fit-content;
-    margin: 1rem auto 0;
-    touch-action: manipulation;
-}
-
-#generate-btn:hover, #generate-btn:focus-visible {
-    background: rgba(255,255,255,0.05);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-}
-
-.loader {
-    border: 2px solid var(--moonlight);
-    border-top-color: var(--ivory);
-    width: clamp(30px, 8vw, 40px);
-    height: clamp(30px, 8vw, 40px);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes spin {
-    to { transform: translate(-50%, -50%) rotate(360deg); }
+    to { transform: rotate(360deg); }
 }
 
-@keyframes fadeIn {
-    to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@media (max-width: 480px) {
-    .verse-container {
-        border-radius: 0.8rem;
-        padding: 1rem;
+@media (max-width: 600px) {
+    .arabic-text {
+        font-size: 1.8rem;
     }
     
-    #verse-text {
-        font-size: 1.8rem;
-        padding: 0 0.5rem;
-    }
-}
-
-@media (min-width: 481px) and (max-width: 768px) {
-    #verse-text {
-        font-size: 2.2rem;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation: none !important;
-        transition: none !important;
+    .container {
+        padding: 0.5rem;
     }
 }
