@@ -70,7 +70,7 @@ class QuranApp {
             );
             
             const translationPromise = fetch(
-                `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/en.asad?cache=${Date.now()}`,
+                `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/en.sahih?cache=${Date.now()}`,
                 { cache: 'no-cache' }
             );
     
