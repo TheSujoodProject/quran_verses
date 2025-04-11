@@ -63,41 +63,71 @@ class QuranApp {
             this.toggleLoader(true);
             const [surah, ayah, verseKey] = this.getRandomVerse();
             
-            const [verseData, translationData, surahData] = await Promise.all([
-                fetch(`https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/ar.alafasy`),
-                fetch(`https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/en.sahih`),
-                fetch(`https://api.alquran.cloud/v1/surah/${surah}`)
+            // Cache-busted API requests
+            const versePromise = fetch(
+                `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/ar.alafasy?cache=${Date.now()}`, 
+                { cache: 'no-cache' }
+            );
+            
+            const translationPromise = fetch(
+                `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/en.asad?cache=${Date.now()}`,
+                { cache: 'no-cache' }
+            );
+    
+            const surahPromise = fetch(
+                `https://api.alquran.cloud/v1/surah/${surah}?cache=${Date.now()}`,
+                { cache: 'no-cache' }
+            );
+    
+            const [verseRes, translationRes, surahRes] = await Promise.all([
+                versePromise,
+                translationPromise,
+                surahPromise
             ]);
-
-            if (!verseData.ok || !translationData.ok || !surahData.ok) {
-                throw new Error('Failed to fetch data');
-            }
-
-            const verse = await verseData.json();
-            const translation = await translationData.json();
-            const surahName = (await surahData.json()).data.englishName;
-
+    
+            // Verify all responses
+            if (!verseRes.ok) throw new Error(`Verse failed: ${verseRes.status}`);
+            if (!translationRes.ok) throw new Error(`Translation failed: ${translationRes.status}`);
+            if (!surahRes.ok) throw new Error(`Surah failed: ${surahRes.status}`);
+    
+            // Parse JSON in parallel
+            const [verseData, translationData, surahData] = await Promise.all([
+                verseRes.json(),
+                translationRes.json(),
+                surahRes.json()
+            ]);
+    
             this.updateUI(
-                verse.data.text,
-                translation.data.text,
-                surahName,
+                verseData.data.text,
+                translationData.data.text,
+                surahData.data.englishName,
                 ayah
             );
             
             this.addToHistory(
-                verse.data.text,
-                translation.data.text,
-                surahName,
+                verseData.data.text,
+                translationData.data.text,
+                surahData.data.englishName,
                 ayah,
                 verseKey
             );
-
+    
         } catch (error) {
-            console.error('Error:', error);
-            setTimeout(() => this.loadNewVerse(), 1500);
+            console.error('Loading Error:', error);
+            this.showErrorNotification();
+            setTimeout(() => this.loadNewVerse(), 2000);
         } finally {
             this.toggleLoader(false);
         }
+    }
+    
+    showErrorNotification() {
+        const errorEl = document.createElement('div');
+        errorEl.className = 'error-notification';
+        errorEl.textContent = 'Connection issue - retrying...';
+        document.body.appendChild(errorEl);
+        
+        setTimeout(() => errorEl.remove(), 3000);
     }
 
     updateUI(arabic, translation, surahName, ayah) {
