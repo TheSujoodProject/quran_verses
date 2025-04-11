@@ -24,6 +24,18 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+@-webkit-viewport { width: device-width; }
+@-moz-viewport { width: device-width; }
+@-ms-viewport { width: device-width; }
+@-o-viewport { width: device-width; }
+@viewport { width: device-width; }
+
+html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
 body {
     background: var(--bg);
     color: var(--text);
@@ -77,14 +89,15 @@ body {
 
 .arabic-text {
     font-family: 'Noto Naskh Arabic', serif;
-    font-size: 2.2rem;
-    line-height: 2.6;
-    text-align: right;
+    font-size: clamp(1.8rem, 6vw, 2.4rem);
+    line-height: 2.2;
     direction: rtl;
+    text-align: right;
     font-variant-ligatures: common-ligatures;
-    text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
-    letter-spacing: -0.5px;
+    text-rendering: optimizeLegibility;
+    letter-spacing: -0.3px;
+    word-spacing: -2px;
 }
 
 
@@ -242,5 +255,17 @@ body {
     
     .container {
         padding: 0.5rem;
+    }
+}
+
+@font-face {
+    font-family: 'Noto Naskh Arabic Mobile';
+    src: url('https://fonts.gstatic.com/s/notonaskharabic/v18/RrQ5bpV-9Dd1b1OAGA6M9PkyDu3BeMeKNlHdk.ttf');
+    font-display: swap;
+}
+
+@media screen and (max-width: 768px) {
+    .arabic-text {
+        font-family: 'Noto Naskh Arabic Mobile', serif;
     }
 }
