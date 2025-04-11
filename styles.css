@@ -30,6 +30,9 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
     line-height: 1.5;
     min-height: 100vh;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
@@ -73,12 +76,16 @@ body {
 }
 
 .arabic-text {
-    font-family: 'Noto Naskh Arabic', sans-serif;
-    font-size: 2rem;
-    line-height: 2.4;
+    font-family: 'UthmanicHafs', sans-serif;
+    font-size: 2.4rem;
+    line-height: 2.6;
     text-align: right;
     direction: rtl;
-    margin-bottom: 1rem;
+    font-feature-settings: "liga" 1, "clig" 1;
+    letter-spacing: -0.5px;
+    word-spacing: 2px;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
 }
 
 .translation-text {
@@ -185,7 +192,7 @@ body {
 }
 
 .history-arabic {
-    font-family: 'Noto Naskh Arabic', sans-serif;
+    font-family: 'UthmanicHafs', sans-serif;
     font-size: 1.4rem;
     text-align: right;
     direction: rtl;
@@ -213,6 +220,12 @@ body {
     animation: slideIn 0.3s ease;
 }
 
+.fonts-loaded .arabic-text {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
 @keyframes slideIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
@@ -230,4 +243,11 @@ body {
     .container {
         padding: 0.5rem;
     }
+}
+
+@font-face {
+    font-family: 'UthmanicHafs';
+    src: url('https://cdn.jsdelivr.net/gh/mushfekurrehman/quran-text-font@master/fonts/UthmanicHafs1Ver18.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/mushfekurrehman/quran-text-font@master/fonts/UthmanicHafs1Ver18.woff') format('woff');
+    font-display: swap;
 }
