@@ -76,17 +76,17 @@ body {
 }
 
 .arabic-text {
-    font-family: 'UthmanicHafs', sans-serif;
-    font-size: 2.4rem;
+    font-family: 'Noto Naskh Arabic', serif;
+    font-size: 2.2rem;
     line-height: 2.6;
     text-align: right;
     direction: rtl;
-    font-feature-settings: "liga" 1, "clig" 1;
-    letter-spacing: -0.5px;
-    word-spacing: 2px;
+    font-variant-ligatures: common-ligatures;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.5px;
 }
+
 
 .translation-text {
     color: var(--text-secondary);
@@ -192,7 +192,7 @@ body {
 }
 
 .history-arabic {
-    font-family: 'UthmanicHafs', sans-serif;
+    font-family: 'Noto Naskh Arabic', serif;
     font-size: 1.4rem;
     text-align: right;
     direction: rtl;
@@ -243,11 +243,4 @@ body {
     .container {
         padding: 0.5rem;
     }
-}
-
-@font-face {
-    font-family: 'UthmanicHafs';
-    src: url('https://cdn.jsdelivr.net/gh/mushfekurrehman/quran-text-font@master/fonts/UthmanicHafs1Ver18.woff2') format('woff2'),
-         url('https://cdn.jsdelivr.net/gh/mushfekurrehman/quran-text-font@master/fonts/UthmanicHafs1Ver18.woff') format('woff');
-    font-display: swap;
 }
