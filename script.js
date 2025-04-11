@@ -162,6 +162,26 @@ class QuranApp {
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
     }
+
 }
+
+const checkMobileFont = () => {
+    const testElement = document.createElement('span');
+    testElement.style.fontFamily = 'Noto Naskh Arabic';
+    testElement.style.position = 'absolute';
+    testElement.style.visibility = 'hidden';
+    testElement.innerHTML = '&#x0627;&#x0644;&#x0644;&#x0647;'; // "Allah" in Arabic
+    document.body.appendChild(testElement);
+    
+    setTimeout(() => {
+        if (testElement.offsetWidth < 50) { // Font not loaded properly
+            document.documentElement.style.fontFamily = 'sans-serif';
+            console.warn('Arabic font failed to load, using system fallback');
+        }
+        testElement.remove();
+    }, 500);
+};
+
+window.addEventListener('load', checkMobileFont);
 
 document.fonts.ready.then(() => new QuranApp());
